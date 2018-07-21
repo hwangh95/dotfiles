@@ -43,36 +43,13 @@ zplug "seebi/dircolors-solarized", ignore:"*", as:plugin
 
 # Load from oh-my-zsh
 ## Useful commands/enhancements
-zplug "plugins/common-aliases",    from:oh-my-zsh, ignore:oh-my-zsh.sh
 zplug "plugins/colored-man-pages", from:oh-my-zsh, ignore:oh-my-zsh.sh
-zplug "plugins/command-not-found", from:oh-my-zsh, ignore:oh-my-zsh.sh
-zplug "plugins/copydir",           from:oh-my-zsh, ignore:oh-my-zsh.sh
-zplug "plugins/copyfile",          from:oh-my-zsh, ignore:oh-my-zsh.sh
-zplug "plugins/cp",                from:oh-my-zsh, ignore:oh-my-zsh.sh
-zplug "plugins/encode64",          from:oh-my-zsh, ignore:oh-my-zsh.sh
 zplug "plugins/extract",           from:oh-my-zsh, ignore:oh-my-zsh.sh
 zplug "plugins/vi-mode",           from:oh-my-zsh, ignore:oh-my-zsh.sh
-zplug "plugins/tmux",              from:oh-my-zsh, ignore:oh-my-zsh.sh
-zplug "plugins/urltools",          from:oh-my-zsh, ignore:oh-my-zsh.sh
-zplug "plugins/fancy-ctrl-z",      from:oh-my-zsh, ignore:oh-my-zsh.sh
-
-## Install oh-my-zsh plugins if the tools are installed
-zplug "plugins/git",               from:oh-my-zsh, if:"(( $+commands[git] ))", ignore:oh-my-zsh.sh
-zplug "plugins/cargo",             from:oh-my-zsh, if:"(( $+commands[cargo] ))", ignore:oh-my-zsh.sh
-zplug "plugins/golang",            from:oh-my-zsh, if:"(( $+commands[go] ))", ignore:oh-my-zsh.sh
-zplug "plugins/svn",               from:oh-my-zsh, if:"(( $+commands[svn] ))", ignore:oh-my-zsh.sh
-zplug "plugins/node",              from:oh-my-zsh, if:"(( $+commands[node] ))", ignore:oh-my-zsh.sh
-zplug "plugins/npm",               from:oh-my-zsh, if:"(( $+commands[npm] ))", ignore:oh-my-zsh.sh
-zplug "plugins/bundler",           from:oh-my-zsh, if:"(( $+commands[bundler] ))", ignore:oh-my-zsh.sh
-zplug "plugins/gem",               from:oh-my-zsh, if:"(( $+commands[gem] ))", ignore:oh-my-zsh.sh
-zplug "plugins/rbenv",             from:oh-my-zsh, if:"(( $+commands[rbenv] ))", ignore:oh-my-zsh.sh
-zplug "plugins/rvm",               from:oh-my-zsh, if:"(( $+commands[rvm] ))", ignore:oh-my-zsh.sh
-zplug "plugins/pip",               from:oh-my-zsh, if:"(( $+commands[pip] ))", ignore:oh-my-zsh.sh
-zplug "plugins/sudo",              from:oh-my-zsh, if:"(( $+commands[sudo] ))", ignore:oh-my-zsh.sh
-zplug "plugins/gpg-agent",         from:oh-my-zsh, if:"(( $+commands[gpg-agent] ))", ignore:oh-my-zsh.sh
-zplug "plugins/systemd",           from:oh-my-zsh, if:"(( $+commands[systemctl] ))", ignore:oh-my-zsh.sh
-zplug "plugins/docker",            from:oh-my-zsh, if:"(( $+commands[docker] ))", ignore:oh-my-zsh.sh
-zplug "plugins/docker-compose",    from:oh-my-zsh, if:"(( $+commands[docker-compose] ))", ignore:oh-my-zsh.sh
+zplug "plugins/git",               from:oh-my-zsh, ignore:oh-my-zsh.sh
+zplug "plugins/cargo",             from:oh-my-zsh, ignore:oh-my-zsh.sh
+zplug "plugins/pip",               from:oh-my-zsh, ignore:oh-my-zsh.sh
+zplug "plugins/systemd",           from:oh-my-zsh, ignore:oh-my-zsh.sh
 
 # zsh tools
 zplug "djui/alias-tips"
@@ -162,13 +139,15 @@ zstyle ':completion:*' substitute 0
 # -------------------------------
 
 # Install missing plugins
-if ! zplug check; then
-    printf "Install plugins? [y/N]: "
-    if read -q; then
-        echo; zplug install
+if [[ $ZPLUGBOOL == 1 ]]; then
+    if ! zplug check; then
+        printf "Install plugins? [y/N]: "
+        if read -q; then
+            echo; zplug install
+        fi
     fi
+    export ZPLUGBOOL=0
 fi
-
 # Check the terminal emulator
 sid=$(($(ps -o sid= -p "$$")))
 sparent=$(($(ps -o ppid= -p "$sid")))
@@ -325,7 +304,7 @@ fi
 
 zplug load
 
-[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 
 # Source functions exports and aliases.
 [[ -f ~/.zsh_functions ]] && source ~/.zsh_functions
