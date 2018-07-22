@@ -6,7 +6,7 @@
 - clean: ['~', '~/.config']
 
 - link:
-    #~/.dotfiles: ''
+    ~/.config/i3: 
     ~/.gitconfig: 
     ~/.zprofile:
     ~/.zshenv: 

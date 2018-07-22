@@ -1,0 +1,190 @@
+set $win Mod4
+set $alt Mod1
+set $ctrl Control
+font pango:DejaVuSansMono Nerd Font, 10
+hide_edge_borders both
+focus_follows_mouse no
+
+# Startup items
+exec sh ~/.fehbg
+exec pidgin
+exec Discord
+
+# Remove title bar
+default_border none
+
+# Start a terminal
+bindsym $win+Return exec terminator
+
+# Scratchpad
+bindsym $win+Shift+minus move scratchpad
+bindsym $win+minus scratchpad show
+
+# Use Mouse+$win to drag floating windows to their wanted position
+floating_modifier $win
+
+# Kill focused window
+bindsym $win+Shift+q kill
+
+# Start dmenu (a program launcher)
+bindsym $win+d exec dmenu_run
+
+# Change focus
+bindsym $win+h focus left
+bindsym $win+j focus down
+bindsym $win+k focus up
+bindsym $win+l focus right
+
+# Alternatively, you can use the cursor keys:
+bindsym $win+Left focus left
+bindsym $win+Down focus down
+bindsym $win+Up focus up
+bindsym $win+Right focus right
+
+# Move focused window
+bindsym $win+Shift+h move left
+bindsym $win+Shift+j move down
+bindsym $win+Shift+k move up
+bindsym $win+Shift+l move right
+
+# alternatively, you can use the cursor keys:
+bindsym $win+Shift+Left move left
+bindsym $win+Shift+Down move down
+bindsym $win+Shift+Up move up
+bindsym $win+Shift+Right move right
+
+# Split in horizontal orientation
+bindsym $win+c split h
+
+# Split in vertical orientation
+bindsym $win+v split v
+
+# Enter fullscreen mode for the focused container
+bindsym $win+f fullscreen
+
+# Change container layout (stacked, tabbed, toggle split)
+bindsym $win+s layout stacking
+bindsym $win+w layout tabbed
+bindsym $win+e layout toggle split
+
+# Toggle tiling / floating
+bindsym $win+Shift+space floating toggle
+
+# Change focus between tiling / floating windows
+bindsym $win+space focus mode_toggle
+
+# Focus the parent container
+bindsym $win+a focus parent
+
+# Switch to workspace
+bindsym $win+1 workspace 1
+bindsym $win+2 workspace 2
+bindsym $win+3 workspace 3
+bindsym $win+4 workspace 4
+bindsym $win+5 workspace 5
+bindsym $win+6 workspace 6
+bindsym $win+7 workspace 7
+bindsym $win+8 workspace 8
+bindsym $win+9 workspace 9
+bindsym $win+0 workspace 10
+
+# Move focused container to workspace
+bindsym $win+Shift+1 move container to workspace 1
+bindsym $win+Shift+2 move container to workspace 2
+bindsym $win+Shift+3 move container to workspace 3
+bindsym $win+Shift+4 move container to workspace 4
+bindsym $win+Shift+5 move container to workspace 5
+bindsym $win+Shift+6 move container to workspace 6
+bindsym $win+Shift+7 move container to workspace 7
+bindsym $win+Shift+8 move container to workspace 8
+bindsym $win+Shift+9 move container to workspace 9
+bindsym $win+Shift+0 move container to workspace 10
+
+# Reload the configuration file
+bindsym $win+Shift+c reload
+# Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $win+Shift+r restart
+# Exit i3 (logs you out of your X session)
+#bindsym $win+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+# i3 auto-lock and manual lock
+bindsym $win+$alt+l exec i3blur
+exec xautolock -time 15 -locker i3blur &
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $win+r mode "resize"
+
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume @DEFAULT_SINK@ +5%"
+bindsym XF86AudioLowerVolume exec "pactl set-sink-volume @DEFAULT_SINK@ -5%"
+bindsym XF86AudioMute exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+#bindsym XF86AudioRaiseVolume exec "amixer -qs set Master,0 1+ unmute"
+#bindsym XF86AudioLowerVolume exec "amixer -qs set Master,0 1- unmute"
+#bindsym XF86AudioMute exec "amixer -qs set Master,0 toggle"
+
+# Screen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5 # decrease screen brightness
+bindsym Shift+XF86MonBrightnessUp exec xbacklight -inc 1 # increase screen brightness
+bindsym Shift+XF86MonBrightnessDown exec xbacklight -dec 1 # decrease screen brightness
+
+# Touchpad controls
+bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+        status_command ~/.cargo/bin/i3status-rs ~/.config/i3/status.toml
+	colors {
+		separator #dc322f
+		background #101010
+		statusline #268bd2
+		focused_workspace #81a2be #1b507c #fcfdfe
+		active_workspace #fdf6e3 #b5bd68 #fdf6e3
+		inactive_workspace #373b41 #373b41 #c5c8c6
+		urgent_workspace #d33682 #cc6666 #fdf6e3
+        }
+}
+
+set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+mode "$mode_system" {
+    bindsym l exec --no-startup-id i3exit lock, mode "default"
+    bindsym e exec --no-startup-id i3exit logout, mode "default"
+    bindsym s exec --no-startup-id i3exit suspend, mode "default"
+    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
+    bindsym r exec --no-startup-id i3exit reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $win+Shift+e mode "$mode_system"
