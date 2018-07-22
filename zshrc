@@ -7,11 +7,39 @@ export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
 # PATH
-export PATH="$HOME/.cargo/bin:$PATH"
+PATH=$PATH:$HOME/.local/bin
+PATH=$PATH:$HOME/.config/i3
+PATH=$PATH:$HOME/.cargo/bin
+export PATH
+
 
 # Miscellaneous
 export DISPLAY=:0
 export ENHANCD_FILTER=fzy
+
+# -------------------------------
+#             Aliases
+# -------------------------------
+
+# Set editor preference to nvim if available.
+if (( $+commands[nvim] )); then
+	alias vim='() { $(whence -p nvim) $@ }'
+else
+	alias vim='() { $(whence -p vim) $@ }'
+fi
+
+# Colored ls
+alias ls="ls --color=auto"
+
+# Colored grep
+alias grep='() { $(whence -p grep) --color=auto $@ }'
+alias egrep='() { $(whence -p egrep) --color=auto $@ }'
+
+# Pipable copy
+alias xcopy="xclip -selection c"
+
+# CD to Windows home directory
+[ -d "/mnt/c/Users/Willy/" ] && alias winhome="cd /mnt/c/Users/Willy/"
 
 # -------------------------------
 #             Plugins
@@ -44,6 +72,7 @@ zplug "seebi/dircolors-solarized", ignore:"*", as:plugin
 # Load from oh-my-zsh
 ## Useful commands/enhancements
 zplug "plugins/colored-man-pages", from:oh-my-zsh, ignore:oh-my-zsh.sh
+zplug "plugins/command-not-found", from:oh-my-zsh, ignore:oh-my-zsh.sh
 zplug "plugins/extract",           from:oh-my-zsh, ignore:oh-my-zsh.sh
 zplug "plugins/vi-mode",           from:oh-my-zsh, ignore:oh-my-zsh.sh
 zplug "plugins/git",               from:oh-my-zsh, ignore:oh-my-zsh.sh
@@ -60,6 +89,7 @@ zplug "zsh-users/zsh-history-substring-search", defer:3
 # -------------------------------
 #             Options
 # -------------------------------
+#
 # less configuration
 export LESS="--tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS"
 
@@ -72,39 +102,6 @@ HISTFILE=~/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=$HISTSIZE
 
-# zsh setop configuration
-setopt append_history           # Dont overwrite history
-setopt extended_history         # Also record time and duration of commands.
-setopt share_history            # Share history between multiple shells
-setopt hist_expire_dups_first   # Clear duplicates when trimming internal hist.
-setopt hist_find_no_dups        # Dont display duplicates during searches.
-setopt hist_ignore_dups         # Ignore consecutive duplicates.
-setopt hist_ignore_all_dups     # Remember only one unique copy of the command.
-setopt hist_reduce_blanks       # Remove superfluous blanks.
-setopt hist_save_no_dups        # Omit older commands in favor of newer ones.
-setopt pushd_ignore_dups        # Dont push copies of the same dir on stack.
-setopt extended_glob
-
-# -------------------------------
-#             Aliases
-# -------------------------------
-
-# Set editor preference to nvim if available.
-if (( $+commands[nvim] )); then
-	alias vim='() { $(whence -p nvim) $@ }'
-else
-	alias vim='() { $(whence -p vim) $@ }'
-fi
-
-# Colored ls
-alias ls="ls --color=auto"
-
-# Colored grep
-alias grep='() { $(whence -p grep) --color=auto $@ }'
-alias egrep='() { $(whence -p egrep) --color=auto $@ }'
-
-# CD to Windows home directory
-alias winhome="cd /mnt/c/Users/Willy/"
 # -------------------------------
 #          Key Bindings
 # -------------------------------
@@ -155,7 +152,7 @@ emulator=$(ps -o comm= -p "$sparent")
 
 case $emulator in
 # Regular setup
-*gnome-terminal*)
+*terminator*)
     simplified=0;;;
 # VScode
 *init*)
@@ -216,6 +213,9 @@ if zplug check "bhilburn/powerlevel9k" && [[ $simplified == 0 ]]; then
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir_writable dir vcs)
     POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs status vi_mode time ssh)
 
+    POWERLEVEL9K_VI_INSERT_MODE_STRING="%F{blue}INSERT%f"
+    POWERLEVEL9K_VI_COMMAND_MODE_STRING="%F{grey}NORMAL%f"
+
     POWERLEVEL9K_VCS_CLEAN_BACKGROUND="green"
     POWERLEVEL9K_VCS_CLEAN_FOREGROUND="$DEFAULT_BACKGROUND"
     POWERLEVEL9K_VCS_MODIFIED_BACKGROUND="yellow"
@@ -240,7 +240,6 @@ if zplug check "bhilburn/powerlevel9k" && [[ $simplified == 0 ]]; then
 
     POWERLEVEL9K_HISTORY_FOREGROUND="$DEFAULT_FOREGROUND"
 
-    POWERLEVEL9K_TIME_FORMAT="%D{%T \uF017}" #  15:29:33
     POWERLEVEL9K_TIME_FOREGROUND="$DEFAULT_FOREGROUND"
     POWERLEVEL9K_TIME_BACKGROUND="$DEFAULT_BACKGROUND"
 
@@ -304,10 +303,4 @@ fi
 
 zplug load
 
-[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
-
-# Source functions exports and aliases.
-[[ -f ~/.zsh_functions ]] && source ~/.zsh_functions
-[[ -f ~/.zsh_exports ]] && source ~/.zsh_exports
-[[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
 ## Edited from the dotfiles of @tonylambiris
