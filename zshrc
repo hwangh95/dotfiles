@@ -1,18 +1,6 @@
 # -------------------------------
 #             Exports
 # -------------------------------
-
-# Locales
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
-
-# PATH
-PATH=$PATH:$HOME/.local/bin
-PATH=$PATH:$HOME/.config/i3
-PATH=$PATH:$HOME/.cargo/bin
-export PATH
-
-
 # Miscellaneous
 export DISPLAY=:0
 export ENHANCD_FILTER=fzy
@@ -23,9 +11,9 @@ export ENHANCD_FILTER=fzy
 
 # Set editor preference to nvim if available.
 if (( $+commands[nvim] )); then
-	alias vim='() { $(whence -p nvim) $@ }'
+    alias vim='() { $(whence -p nvim) $@ }'
 else
-	alias vim='() { $(whence -p vim) $@ }'
+    alias vim='() { $(whence -p vim) $@ }'
 fi
 
 # Colored ls
@@ -45,7 +33,7 @@ alias xcopy="xclip -selection c"
 #             Plugins
 # -------------------------------
 
-# Zplug Initialization 
+# Zplug Initialization
 [ ! -d ~/.zplug ] && git clone https://github.com/zplug/zplug ~/.zplug
 source ~/.zplug/init.zsh
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
@@ -84,6 +72,7 @@ zplug "plugins/systemd",           from:oh-my-zsh, ignore:oh-my-zsh.sh
 zplug "djui/alias-tips"
 zplug "hlissner/zsh-autopair", defer:2
 zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "zsh-users/zsh-history-substring-search", defer:3
 
 # -------------------------------
@@ -136,14 +125,11 @@ zstyle ':completion:*' substitute 0
 # -------------------------------
 
 # Install missing plugins
-if [[ $ZPLUGBOOL == 1 ]]; then
-    if ! zplug check; then
-        printf "Install plugins? [y/N]: "
-        if read -q; then
-            echo; zplug install
-        fi
+if ! zplug check; then
+    printf "Install plugins? [y/N]: "
+    if read -q; then
+        echo; zplug install
     fi
-    export ZPLUGBOOL=0
 fi
 # Check the terminal emulator
 sid=$(($(ps -o sid= -p "$$")))
@@ -153,10 +139,12 @@ emulator=$(ps -o comm= -p "$sparent")
 case $emulator in
 # Regular setup
 *terminator*)
-    simplified=0;;;
+    simplified=0;
+    ;;
 # VScode
 *init*)
-    simplified=1;;;
+    simplified=1;
+    ;;
 esac
 
 if zplug check "seebi/dircolors-solarized"; then
@@ -176,7 +164,7 @@ fi
 # Regular usage
 if zplug check "bhilburn/powerlevel9k" && [[ $simplified == 0 ]]; then
     # Easily switch primary foreground/background colors
-    DEFAULT_FOREGROUND=006 DEFAULT_BACKGROUND=235
+    DEFAULT_FOREGROUND=004 DEFAULT_BACKGROUND=234
     DEFAULT_COLOR=$DEFAULT_FOREGROUND
 
     # powerlevel9k prompt theme
@@ -184,7 +172,6 @@ if zplug check "bhilburn/powerlevel9k" && [[ $simplified == 0 ]]; then
 
     POWERLEVEL9K_MODE="nerdfont-complete"
     POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
-    #POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
 
     POWERLEVEL9K_ALWAYS_SHOW_CONTEXT=true
 
@@ -213,8 +200,12 @@ if zplug check "bhilburn/powerlevel9k" && [[ $simplified == 0 ]]; then
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir_writable dir vcs)
     POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs status vi_mode time ssh)
 
-    POWERLEVEL9K_VI_INSERT_MODE_STRING="%F{blue}INSERT%f"
-    POWERLEVEL9K_VI_COMMAND_MODE_STRING="%F{grey}NORMAL%f"
+
+    # Vi-Mode
+    POWERLEVEL9K_VI_MODE_INSERT_BACKGROUND="240"
+    POWERLEVEL9K_VI_MODE_INSERT_FOREGROUND="43"
+    POWERLEVEL9K_VI_MODE_NORMAL_BACKGROUND="240"
+    POWERLEVEL9K_VI_MODE_NORMAL_FOREGROUND="231"
 
     POWERLEVEL9K_VCS_CLEAN_BACKGROUND="green"
     POWERLEVEL9K_VCS_CLEAN_FOREGROUND="$DEFAULT_BACKGROUND"
