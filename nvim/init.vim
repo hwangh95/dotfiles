@@ -36,6 +36,7 @@ Plug 'fszymanski/deoplete-emoji'
 Plug 'sebastianmarkow/deoplete-rust', {'for': 'rust'}
 Plug 'wellle/tmux-complete.vim'                    " Completion from tmux panes
 Plug 'zchee/deoplete-jedi', {'for': 'python'}      " Python completion
+Plug 'zchee/deoplete-clang'                      " C/C++ completion
 
 " Editing
 Plug 'AndrewRadev/splitjoin.vim'                   " Splitting and joining
@@ -198,6 +199,10 @@ imap <expr><CR> pumvisible() ? deoplete#mappings#close_popup() : "\<CR>\<Plug>Au
 set conceallevel=2
 set concealcursor=niv
 
+" Deoplete-clang
+
+let g:deoplete#sources#clang#libclang_path = "/usr/lib64/libclang.so"
+let g:deoplete#sources#clang#clang_header = "/usr/lib64/clang/6.0.1/include/"
 
 """""""""""""""
 "  Numbers,   "
