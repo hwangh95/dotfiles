@@ -27,21 +27,21 @@ Plug 'vimoutliner/vimoutliner'                     " Outlines
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
 
 " Completion
-Plug 'fszymanski/deoplete-emoji'
-Plug 'sebastianmarkow/deoplete-rust', {'for': 'rust'}
 Plug 'Shougo/context_filetype.vim'                 " Add context filetype
 Plug 'Shougo/deoplete.nvim'                        " Completion
 Plug 'Shougo/echodoc.vim'                          " Print documentation
 Plug 'Shougo/neoinclude.vim'                       " Completion framework
-Plug 'Shougo/neopairs.vim'                         " Autoclose after completion
+Plug 'jiangmiao/auto-pairs'                        " Autoclose after completion
+Plug 'fszymanski/deoplete-emoji'
+Plug 'sebastianmarkow/deoplete-rust', {'for': 'rust'}
 Plug 'wellle/tmux-complete.vim'                    " Completion from tmux panes
 Plug 'zchee/deoplete-jedi', {'for': 'python'}      " Python completion
 
 " Editing
 Plug 'AndrewRadev/splitjoin.vim'                   " Splitting and joining
 Plug 'Chiel92/vim-autoformat'                      " Automagically format
-Plug 'honza/vim-snippets'                          " Snippits Stuff
-Plug 'SirVer/ultisnips'                            " Snippits
+Plug 'Shougo/neosnippet.vim'                       " Snippets Engine
+Plug 'Shougo/neosnippet-snippets'                  " Base snippets
 Plug 'pearofducks/ansible-vim', { 'do': './UltiSnips/generate.py' }
 Plug 'junegunn/vim-easy-align'                     " Align things more easily
 Plug 'lervag/vimtex', {'for': 'tex'}               " Latex Plugin
@@ -60,10 +60,11 @@ Plug 'ap/vim-css-color'                            " Colors your hex colors
 Plug 'vim-airline/vim-airline'                     " Tabline/status bar for vim
 Plug 'vim-airline/vim-airline-themes'              " Themes for Airline
 Plug 'majutsushi/tagbar'                           " Display tags in a window
-Plug 'morhetz/gruvbox'                   " Colors!
+Plug 'morhetz/gruvbox'                             " Colors!
 
 
 call plug#end()
+
 
 """""""""""""""
 "   General   "
@@ -90,71 +91,20 @@ set backupdir=~/.local/share/nvim/backups//
 set undodir=~/.local/share/nvim/undo//
 set undofile
 
-" Colors!
-"" Use truecolor
-set termguicolors
-set background=dark
-
-"" gruvbox colors
-let g:gruvbox_italic = 1
-let g:gruvbox_contrast_dark = 'hard'
-let g:hybrid_custom_term_colors = 1
-
-colorscheme gruvbox
-let g:airline_theme = 'gruvbox'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-
-" Use this if you have a colorscheme that breaks terminal transparency
-hi Normal ctermbg=none
-
-" Show matching parenthesis
-set showmatch
-
-" Autoindentation.
-set autoindent
-
-"" tabs
-set tabstop=4 softtabstop=0 expandtab shiftwidth=4
-
-" Allow backspacing over line breaks, start of insert action, and autoindentation
-set backspace=eol,start,indent
-
-" Ignore case when lowercase is used in the search
-set ignorecase smartcase
-" Highlight search results
-set hlsearch
-" Move to matched string while typing the search pattern
-set incsearch
-" Wrap search around end-of-file
-set wrapscan
-
-" Completion for commands
-set wildmenu
-
-" Show line numbers
-set number
-augroup line_numbers
-  autocmd InsertEnter * :set norelativenumber
-  autocmd InsertLeave * :set relativenumber
-augroup END
-
-function! NumberToggle()
-  if(&relativenumber == 1)
-    set norelativenumber
-  else
-    set relativenumber
-  endif
-endfunc
+" Fuzzy bindings
+nnoremap <C-p> :FuzzyOpen<CR>
+" Allow saving of files as sudo when I forgot to start vim using sudo.
+cmap w!! w !sudo tee > /dev/null %
+" Don't allow netrwhist to be created
+let g:netrw_dirhistmax = 0
+" Change vim skeleton file
+let g:skeleton_template_dir = "~/.config/nvim/templates"
 
 " Make the mouse useful
 set mouse=a
 
-" Allow saving of files as sudo when I forgot to start vim using sudo.
-cmap w!! w !sudo tee > /dev/null %
-
-" Don't allow netrwhist to be created
-let g:netrw_dirhistmax = 0
+" Set <leader>
+let mapleader = "-"
 
 " Allow switching buffers without saving
 set hidden
@@ -173,6 +123,19 @@ set visualbell t_fb=
 
 " Incsub stuff
 set inccommand=nosplit
+" Clear search term
+command Clear let @/ = ""
+" Ignore case when lowercase is used in the search
+set ignorecase smartcase
+" Highlight search results
+set hlsearch
+" Move to matched string while typing the search pattern
+set incsearch
+" Wrap search around end-of-file
+set wrapscan
+
+" Completion for commands
+set wildmenu
 
 "" Remember cursor position on buffer leave
 augroup cursorRemember
@@ -180,47 +143,102 @@ augroup cursorRemember
   au BufEnter * if(exists('b:winview')) | call winrestview(b:winview) | endif
 augroup end
 
-" Automagically format on save
-" augroup saveFormat
-"   au BufWrite * :Autoformat
-" augroup end
 
+"""""""""""""""
+"    Colors   "
+"    & GUI    "
+"""""""""""""""
+
+"" Use truecolor
+set termguicolors
+set background=dark
+
+"" gruvbox colors
+let g:gruvbox_italic = 1
+let g:gruvbox_contrast_dark = 'hard'
+let g:hybrid_custom_term_colors = 1
+
+colorscheme gruvbox
+let g:airline_theme = 'gruvbox'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+
+" Use this if you have a colorscheme that breaks terminal transparency
+hi Normal ctermbg=none
 
 "" Change cursor shape
 set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 
-" Change vim skeleton file
-let g:skeleton_template_dir = "~/.config/nvim/templates"
 
+"""""""""""""""
+" Completions "
+"   & Pairs   "
+"""""""""""""""
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+endif
+let g:deoplete#enable_at_startup = 1
+
+" Show matching parenthesis
+set showmatch
+" Easy pair manipulation
 let g:sandwich#recipes = deepcopy(g:sandwich#default_recipes)
 
+" deoplete + neosnippet + autopairs changes
+let g:AutoPairsMapCR=0
+let g:deoplete#auto_complete_start_length = 1
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
+imap <expr><TAB> pumvisible() ? "\<C-n>" : (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>")
+imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+imap <expr><CR> pumvisible() ? deoplete#mappings#close_popup() : "\<CR>\<Plug>AutoPairsReturn"
+
+" conceal neosnippet markers
+set conceallevel=2
+set concealcursor=niv
+
+
 """""""""""""""
-" Keybindings "
-" & commands  "
+"  Numbers,   "
+"    Tabs,    "
+"  & Aligns   "
 """""""""""""""
 
-" Set <leader>
-let mapleader = "-"
+" ---------- Numbers ----------
+" Show line numbers
+set number
+augroup line_numbers
+  autocmd InsertEnter * :set norelativenumber
+  autocmd InsertLeave * :set relativenumber
+augroup END
 
-" Fuzzy bindings
-nnoremap <C-p> :FuzzyOpen<CR>
-
-" Clear search term
-command Clear let @/ = ""
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set norelativenumber
+  else
+    set relativenumber
+  endif
+endfunc
 
 " NumberToggle()
-nnoremap <C-n> :call NumberToggle()<cr>
+nnoremap <C-n> :call NumberToggle()<CR>
 
-" Make Enter select completion without adding a new line.
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+" ------------ Tabs -----------
+" Autoindentation.
+set autoindent
 
-" F12 resyncs syntax
-noremap <F12> <Esc>:syntax sync fromstart<CR>
-inoremap <F12> <C-o>:syntax sync fromstart<CR>
+"" tabs
+set tabstop=4 expandtab shiftwidth=4 smarttab
 
+" Allow backspacing over line breaks, start of insert action, and autoindentation
+set backspace=eol,start,indent
+
+" ---------- Aligns -----------
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
 " Edited from the dotfiles of @m-wynn

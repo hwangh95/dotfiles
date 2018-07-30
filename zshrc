@@ -1,33 +1,24 @@
 # -------------------------------
-#             Exports
+#             Options
 # -------------------------------
-# Miscellaneous
+
+# Set display for Windows x
 export DISPLAY=:0
+
+# fzy for fuzzy searching
 export ENHANCD_FILTER=fzy
 
-# -------------------------------
-#             Aliases
-# -------------------------------
+# less configuration
+export LESS="--tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS"
 
-# Set editor preference to nvim if available.
-if (( $+commands[nvim] )); then
-    alias vim='() { $(whence -p nvim) $@ }'
-else
-    alias vim='() { $(whence -p vim) $@ }'
-fi
+# zsh QoL fixes
+KEYTIMEOUT=1
+WORDCHARS='*?_-[]~=./&;!#$%^(){}<>'
 
-# Colored ls
-alias ls="ls --color=auto"
-
-# Colored grep
-alias grep='() { $(whence -p grep) --color=auto $@ }'
-alias egrep='() { $(whence -p egrep) --color=auto $@ }'
-
-# Pipable copy
-alias xcopy="xclip -selection c"
-
-# CD to Windows home directory
-[ -d "/mnt/c/Users/Willy/" ] && alias winhome="cd /mnt/c/Users/Willy/"
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=1000000
+SAVEHIST=$HISTSIZE
 
 # -------------------------------
 #             Plugins
@@ -39,7 +30,7 @@ source ~/.zplug/init.zsh
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
 # Searching
-#zplug "aperezdc/zsh-fzy"
+zplug "aperezdc/zsh-fzy"
 
 # Bookmarks
 zplug "jocelynmallon/zshmarks"
@@ -74,84 +65,6 @@ zplug "hlissner/zsh-autopair", defer:2
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "zsh-users/zsh-history-substring-search", defer:3
-
-# -------------------------------
-#             Options
-# -------------------------------
-#
-# less configuration
-export LESS="--tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS"
-
-# zsh QoL fixes
-KEYTIMEOUT=1
-WORDCHARS='*?_-[]~=./&;!#$%^(){}<>'
-
-# History
-HISTFILE=~/.zsh_history
-HISTSIZE=1000000
-SAVEHIST=$HISTSIZE
-
-# -------------------------------
-#          Key Bindings
-# -------------------------------
-
-typeset -A key
-
-key[Home]=${terminfo[khome]}
-key[End]=${terminfo[kend]}
-key[Insert]=${terminfo[kich1]}
-key[Delete]=${terminfo[kdch1]}
-key[Up]=${terminfo[kcuu1]}
-key[Down]=${terminfo[kcud1]}
-key[Left]=${terminfo[kcub1]}
-key[Right]=${terminfo[kcuf1]}
-key[PageUp]=${terminfo[kpp]}
-key[PageDown]=${terminfo[knp]}
-
-# setup key accordingly
-[[ -n "${key[Home]}"    ]]  && bindkey  "${key[Home]}"    beginning-of-line
-[[ -n "${key[End]}"     ]]  && bindkey  "${key[End]}"     end-of-line
-[[ -n "${key[Insert]}"  ]]  && bindkey  "${key[Insert]}"  overwrite-mode
-[[ -n "${key[Delete]}"  ]]  && bindkey  "${key[Delete]}"  delete-char
-[[ -n "${key[Up]}"      ]]  && bindkey  "${key[Up]}"      history-beginning-search-backward
-[[ -n "${key[Down]}"    ]]  && bindkey  "${key[Down]}"    history-beginning-search-forward
-
-# Finally, make sure the terminal is in application mode, when zle is
-# active. Only then are the values from $terminfo valid.
-function zle-line-init () {
-    echoti smkx
-}
-function zle-line-finish () {
-    echoti rmkx
-}
-zle -N zle-line-init
-zle -N zle-line-finish
-# Bindkey function courtesy of @AbigailBuccaneer
-
-# -------------------------------
-#           Completions
-# -------------------------------
-
-zstyle ':completion:*' add-space true
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _complete _ignored
-zstyle ':completion:*' completions 1
-zstyle ':completion:*' glob 1
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' ignore-parents parent pwd directory
-zstyle ':completion:*' insert-unambiguous true
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' list-suffixes true
-zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+r:|[._-]=* r:|=*'
-zstyle ':completion:*' match-original only
-zstyle ':completion:*' max-errors 3
-zstyle ':completion:*' menu select=1
-zstyle ':completion:*' original true
-zstyle ':completion:*' preserve-prefix '//[^/]##/'
-zstyle ':completion:*' prompt 'Num of Errors %e'
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' substitute 0
 
 # -------------------------------
 #             Startup
@@ -326,5 +239,79 @@ elif zplug check "bhilburn/powerlevel9k" && [[ $simplified == 1 ]]; then
 fi
 
 zplug load
+
+#---------------------------------------------------------------
+
+# -------------------------------
+#           Completions
+# -------------------------------
+
+zstyle ':completion:*' add-space true
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _complete _ignored
+zstyle ':completion:*' completions 1
+zstyle ':completion:*' glob 1
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' ignore-parents parent pwd directory
+zstyle ':completion:*' insert-unambiguous true
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' list-suffixes true
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+r:|[._-]=* r:|=*'
+zstyle ':completion:*' match-original only
+zstyle ':completion:*' max-errors 3
+zstyle ':completion:*' menu select=1
+zstyle ':completion:*' original true
+zstyle ':completion:*' preserve-prefix '//[^/]##/'
+zstyle ':completion:*' prompt 'Num of Errors %e'
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' substitute 0
+
+# -------------------------------
+#          Key Bindings
+# -------------------------------
+
+bindkey '^R' fzy-history-widget                         # [Ctrl-r] - Search history using fzy
+bindkey '^[[5~' up-line-or-history                      # [Fn-UpArrow = Page Up]
+bindkey '^[[6~' down-line-or-history                    # [Fn-DownArrow = Page Down]
+
+# Make search up and down work, so partially type and hit up/down to find relevant stuff
+bindkey '^[[A' up-line-or-search                        # [Ctrl-UpArrow]
+bindkey '^[[B' down-line-or-search                      # [Ctrl-DownArrow]
+
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F'  end-of-line
+bindkey ' ' magic-space                                 # Also do history expansion on space
+
+bindkey '^[[1;5C' forward-word                          # [Ctrl-RightArrow] - move forward one word (on linux)
+bindkey '^[[1;5D' backward-word                         # [Ctrl-LeftArrow] - move backward one word (on linux)
+
+bindkey "^[[3~" delete-char
+bindkey '^[[Z' reverse-menu-complete
+
+
+# -------------------------------
+#             Aliases
+# -------------------------------
+
+# Set editor preference to nvim if available.
+if (( $+commands[nvim] )); then
+    alias vim='() { $(whence -p nvim) $@ }'
+else
+    alias vim='() { $(whence -p vim) $@ }'
+fi
+
+# Colored ls
+alias ls="ls --color=auto"
+
+# Colored grep
+alias grep='() { $(whence -p grep) --color=auto $@ }'
+alias egrep='() { $(whence -p egrep) --color=auto $@ }'
+
+# Pipable copy
+alias xcopy="xclip -selection c"
+
+# CD to Windows home directory
+[ -d "/mnt/c/Users/Willy/" ] && alias winhome="cd /mnt/c/Users/Willy/"
 
 ## Edited from the dotfiles of @tonylambiris
