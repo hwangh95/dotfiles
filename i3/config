@@ -6,9 +6,14 @@ hide_edge_borders both
 focus_follows_mouse no
 
 # Startup items
-exec sh ~/.fehbg
+exec --no-startup-id sh ~/.fehbg
+exec --no-startup-id nm-applet
+exec --no-startup-id ibus-daemon -drx
+
 exec pidgin
+exec google-chrome
 exec Discord
+exec qbittorrent
 
 # Remove title bar
 default_border none
@@ -104,8 +109,6 @@ bindsym $win+Shift+0 move container to workspace 10
 bindsym $win+Shift+c reload
 # Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $win+Shift+r restart
-# Exit i3 (logs you out of your X session)
-#bindsym $win+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 # i3 auto-lock and manual lock
 bindsym $win+$alt+l exec i3blur
 exec xautolock -time 15 -locker i3blur &
@@ -140,9 +143,6 @@ bindsym $win+r mode "resize"
 bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume @DEFAULT_SINK@ +5%"
 bindsym XF86AudioLowerVolume exec "pactl set-sink-volume @DEFAULT_SINK@ -5%"
 bindsym XF86AudioMute exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
-#bindsym XF86AudioRaiseVolume exec "amixer -qs set Master,0 1+ unmute"
-#bindsym XF86AudioLowerVolume exec "amixer -qs set Master,0 1- unmute"
-#bindsym XF86AudioMute exec "amixer -qs set Master,0 toggle"
 
 # Screen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
@@ -163,19 +163,20 @@ bindsym XF86AudioPrev exec playerctl previous
 # finds out, if available)
 bar {
         status_command i3status-rs ~/.config/i3/status.toml
-	colors {
-		separator #dc322f
-		background #101010
-		statusline #268bd2
-		focused_workspace #81a2be #1b507c #fcfdfe
-		active_workspace #fdf6e3 #b5bd68 #fdf6e3
-		inactive_workspace #373b41 #373b41 #c5c8c6
-		urgent_workspace #d33682 #cc6666 #fdf6e3
+        colors {
+                separator #dc322f
+                background #101010
+                statusline #268bd2
+                focused_workspace #81a2be #1b507c #fcfdfe
+                active_workspace #fdf6e3 #b5bd68 #fdf6e3
+                inactive_workspace #373b41 #373b41 #c5c8c6
+                urgent_workspace #d33682 #cc6666 #fdf6e3
         }
 }
 
-set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+set $mode_system System (d) dark screen, (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
 mode "$mode_system" {
+    bindsym d exec --no-startup-id xset dpms force off, mode "default"
     bindsym l exec --no-startup-id i3exit lock, mode "default"
     bindsym e exec --no-startup-id i3exit logout, mode "default"
     bindsym s exec --no-startup-id i3exit suspend, mode "default"

@@ -164,6 +164,8 @@ let g:airline_theme = 'gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
+" ALE with airline
+let g:airline#extensions#ale#enabled = 1
 " Use this if you have a colorscheme that breaks terminal transparency
 hi Normal ctermbg=none
 

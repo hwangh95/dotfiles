@@ -38,6 +38,9 @@ device = "BAT1"
 interval = 10
 
 [[block]]
+block = "xrandr"
+
+[[block]]
 block = "backlight"
 
 [[block]]
