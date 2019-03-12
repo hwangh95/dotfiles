@@ -10,10 +10,17 @@ exec --no-startup-id sh ~/.fehbg
 exec --no-startup-id nm-applet
 exec --no-startup-id ibus-daemon -drx
 
+exec --no-startup-id i3-msg 'workspace 2; append_layout ~/.config/i3/workspace-2.json'
+exec --no-startup-id i3-msg 'workspace 9; append_layout ~/.config/i3/workspace-9.json'
+exec --no-startup-id i3-msg 'workspace 10; append_layout ~/.config/i3/workspace-10.json'
+
 exec pidgin
+exec lutris
 exec google-chrome
 exec Discord
 exec qbittorrent
+exec terminator --working-directory=~/Anime
+exec terminator -T weechat -e weechat
 
 # Remove title bar
 default_border none

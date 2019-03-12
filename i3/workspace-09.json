@@ -1,0 +1,51 @@
+{
+    "border": "none",
+    "floating": "auto_off",
+    "layout": "tabbed",
+    "percent": 1,
+    "type": "con",
+    "nodes": [
+        {
+            "border": "none",
+            "current_border_width": 0,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 855,
+               "width": 1600,
+               "x": 0,
+               "y": 22
+            },
+            "name": "qBittorrent",
+            "percent": 0.5,
+            "swallows": [
+               {
+                   "class": "^qBittorrent$",
+                   "instance": "^qbittorrent$"
+               }
+            ],
+            "type": "con"
+        },
+        {
+            "border": "none",
+            "current_border_width": 0,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 855,
+               "width": 1600,
+               "x": 0,
+               "y": 22
+            },
+            "name": "Discord",
+            "percent": 0.5,
+            "swallows": [
+               {
+                  "class": "^discord$",
+                  "instance": "^discord$",
+                  "title": "^Discord$"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
