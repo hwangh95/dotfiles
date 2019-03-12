@@ -1,0 +1,34 @@
+[global_config]
+  borderless = True
+  enabled_plugins = TerminatorThemes, LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
+  title_font = DejaVuSansMono Nerd Font 10
+  title_hide_sizetext = True
+  title_receive_bg_color = "#c80003"
+  title_transmit_bg_color = "#204a87"
+  title_use_system_font = False
+[keybindings]
+  go_left = None
+  go_down = None
+  go_up = None
+  go_right = None
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = default
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    background_color = "#1d2021"
+    cursor_color = "#aaaaaa"
+    custom_command = zsh
+    font = DejaVuSansMono Nerd Font 12
+    foreground_color = "#ebdbb2"
+    login_shell = True
+    palette = "#1d2021:#cc241d:#98971a:#d79921:#458588:#b16286:#689d6a:#a89984:#928374:#fb4934:#b8bb26:#fabd2f:#83a598:#d3869b:#8ec07c:#ebdbb2"
+    use_custom_command = True
+    use_system_font = False
