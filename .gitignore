@@ -1,2 +1,4 @@
 nvim/autoload/plug.vim
 terminator/plugins/terminator-themes.pyc
+weechat/logs/*
+weechat/weechat.log
